@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+   <head>
+       <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+       <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+       <script src="{{ url_for('static', filename='js/bootstrap-datepicker.js') }}"></script>
+       <script type=text/javascript>
+       $(document).ready(function () {
+           $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+  var date = new Date();
+  var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  var end = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  $('#from_date').datepicker({
+format: "mm/dd/yyyy",
+todayHighlight: true,
+startDate: today,
+endDate: end,
+autoclose: true
+  });
+  $('#to_date').datepicker({
+format: "mm/dd/yyyy",
+todayHighlight: true,
+startDate: today,
+endDate: end,
+autoclose: true
+  });
+
+  $('#from_date,#to_date').datepicker('setDate', today);
+           {% block js %}
+           {% endblock %}
+        });
+       </script>
+       <link rel="stylesheet" href="{{ url_for('static', filename='css/datepicker.css') }}">
+       <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+   </head>
+   <body>
+   {% block body %}
+   {% endblock %}
+   </body>
+</html>

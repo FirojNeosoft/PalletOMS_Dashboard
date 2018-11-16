@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block body %}
+         <h3>Dashboard</h3>
+      <div class="container">
+
+         <form action = "{{ url_for('dashboard') }}" method = post class="form-inline">
+            {{ form.hidden_tag() }}
+            
+            <div>
+              <div class="form-group">
+               {{ form.cmp.label(class="form-control-label") }}
+                   <select class="form-control" id="cmp" name="cmp">
+                       {% for cmp in list_companies %}
+                           <option value="{{cmp.id}}">{{cmp.name}}</option>
+                       {% endfor %}
+                   </select>
+              </div>
+<div class="form-group"></div>
+              <div class="input-group input-daterange">
+               {{ form.from_date(class="form-control") }}
+<div class="input-group-addon">to</div>
+               {{ form.to_date(class="form-control") }}
+              </div>
+               {{ form.submit(class="btn btn-primary") }}
+            </div>
+         </form>
+          <div class="ln_solid"></div>
+
+          <div class="row">
+              <div id="container" class="col-sm-3 col-md-6 col-lg-4"></div>
+              <div class="col-sm-3 col-md-6 col-lg-4">
+                  <h4> Top Companies </h4>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>LY YTD</th>
+                        <th>CY YTD</th>
+                        <th>YTD %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for cmp in top_companies %}
+                      <tr>
+                        <td>{{ cmp.name }}</td>
+                        <td>{{ cmp.ly }}</td>
+                        <td>{{ cmp.cy }}</td>
+                        <td>62.65</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  </table>
+              </div>
+              <div class="col-sm-3 col-md-6 col-lg-4">
+                  <h4> Top Categories </h4>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>LY YTD</th>
+                        <th>CY YTD</th>
+                        <th>YTD %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Beans</td>
+                        <td>$6.85</td>
+                        <td>$9.45</td>
+                        <td>62.65</td>
+                      </tr>
+                      <tr>
+                        <td>Pantry</td>
+                        <td>$6.85</td>
+                        <td>$9.45</td>
+                        <td>62.65</td>
+                      </tr>
+                      <tr>
+                        <td>Frozen</td>
+                        <td>$6.85</td>
+                        <td>$9.45</td>
+                        <td>62.65</td>
+                      </tr>
+                      <tr>
+                        <td>Rice</td>
+                        <td>$6.85</td>
+                        <td>$9.45</td>
+                        <td>62.65</td>
+                      </tr>
+                      <tr>
+                        <td>Iron</td>
+                        <td>$6.85</td>
+                        <td>$9.45</td>
+                        <td>62.65</td>
+                      </tr>
+                      <tr>
+                        <td>Ply</td>
+                        <td>$6.85</td>
+                        <td>$9.45</td>
+                        <td>62.65</td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="row">
+              <div id="container1" class="col-sm-3 col-md-6 col-lg-4"></div>
+              <div id="container2" class="col-sm-3 col-md-6 col-lg-4"></div>
+              <div id="container3" class="col-sm-3 col-md-6 col-lg-4"></div>
+          </div>
+      </div>
+{% endblock %}
+{% block static %}
+<script>
+  $(document).ready(function(){
+   $('#from_date').attr("placeholder", "From Date");
+   $('#from_date').datepicker({'dateFormat': 'mm/dd/yy'});
+   $('#to_date').attr("placeholder", "To Date");
+   $('#to_date').datepicker({'dateFormat': 'mm/dd/yy'});
+
+Highcharts.chart('container', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Sales'
+    },
+    xAxis: {{ xAxis1|safe }},
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Sales'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: {{ series1|safe }}
+});
+
+
+Highcharts.chart('container1', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Sales Quarter 2017 Vs 2018'
+    },
+    xAxis: {
+        categories: [
+            'Q 1',
+            'Q 2',
+            'Q 3',
+            'Q 4',
+        ],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Sales Quarter'
+        }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+            borderWidth: 0
+        }
+    },
+    series: [{
+        name: 'LY YTD',
+        data: [0, 0, 0, 0]
+
+    }, {
+        name: 'CY YTD',
+        data: [83.6, 78.8, 98.5, 93.4]
+
+    }]
+});
+
+Highcharts.chart('container2', {
+    title: {
+        text: 'Category YTD Vs LY'
+    },
+    xAxis: {
+        categories: ['Beans', 'Rice', 'Pantry', 'Bananas']
+    },
+    labels: {
+        items: [{
+            html: '',
+            style: {
+                left: '50px',
+                top: '18px',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+            }
+        }]
+    },
+    series: [{
+        type: 'column',
+        name: 'YTD',
+        data: [3, 2, 1, 3]
+    }, {
+        type: 'column',
+        name: 'LY',
+        data: [4, 3, 2, 7]
+    },{
+        type: 'spline',
+        name: 'Average',
+        data: [3, 2, 1, 3],
+        marker: {
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[3],
+            fillColor: 'white'
+        }
+    }]
+});
+
+Highcharts.chart('container3', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Category Mix YTD'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Brands',
+        colorByPoint: true,
+        data: [{
+            name: 'Distributed Brands',
+            y: 61.41,
+            sliced: true,
+            selected: true
+        }, {
+            name: 'Beans',
+            y: 11.84
+        }, {
+            name: 'Rice',
+            y: 10.85
+        }, {
+            name: 'Ege',
+            y: 4.67
+        }, {
+            name: 'Bread',
+            y: 4.18
+        }, {
+            name: 'Sugar',
+            y: 1.64
+        }, {
+            name: 'Other',
+            y: 2.61
+        }]
+    }]
+});
+
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block body %}
+         <h3>Pallet OMS</h3>
+      <div class="container">
+
+         <form action = "{{ url_for('dashboard') }}" method = post class="form-inline">
+            {{ form.hidden_tag() }}
+            
+            <div>
+              <div class="form-group">
+               {{ form.cmp.label(class="form-control-label") }}
+               {{ form.cmp(class="form-control") }}
+              </div>
+<div class="form-group"></div>
+              <div class="input-group input-daterange">
+               {{ form.from_date(class="form-control") }}
+<div class="input-group-addon">to</div>
+               {{ form.to_date(class="form-control") }}
+              </div>
+               {{ form.submit(class="btn btn-primary") }}
+            </div>
+         </form>
+      </div>
+{% endblock %}

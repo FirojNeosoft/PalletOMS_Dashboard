@@ -1,0 +1,18 @@
+https://blog.theodo.fr/2017/03/developping-a-flask-web-app-with-a-postresql-database-making-all-the-possible-errors/
+http://flask.pocoo.org/
+
+export DATABASE_URI='mysql+pymysql://root:neosoft%%40123@localhost:3306/ProjectTracker'
+
+export DATABASE_URI='mysql://root:neosoft%%40123@localhost:3306/ProjectTracker'
+
+export DATABASE_URI='mysql+pymysql://root:neosoft%%40123@localhost/ProjectTracker'
+
+export DATABASE_URL='postgresql://postgres:postgres@localhost:5432/ProjectTracker'
+
+https://github.com/puikinsh/CoolAdmin
+https://www.highcharts.com/demo/column-basic
+
+https://pythonprogramming.net/adding-js-plugins-flask-highcharts-example/
+https://gist.github.com/vgoklani/5347161
+https://www.reddit.com/r/flask/comments/6h4fe6/multiple_highcharts_in_one_page/
+http://bl.ocks.org/vgoklani/5347161
