@@ -25,12 +25,13 @@
                {{ form.submit(class="btn btn-primary") }}
             </div>
          </form>
+          {% if form_name == 'edit' %}
           <div class="ln_solid"></div>
 
           <div class="row">
               <div id="container" class="col-sm-3 col-md-6 col-lg-4"></div>
               <div class="col-sm-3 col-md-6 col-lg-4">
-                  <h4> Top Companies </h4>
+                  <h4> Top Customers </h4>
                   <table class="table">
                     <thead>
                       <tr>
@@ -41,12 +42,12 @@
                       </tr>
                     </thead>
                     <tbody>
-                    {% for cmp in top_companies %}
+                    {% for cmp in top_customers %}
                       <tr>
                         <td>{{ cmp.name }}</td>
-                        <td>{{ cmp.ly }}</td>
-                        <td>{{ cmp.cy }}</td>
-                        <td>62.65</td>
+                        <!--<td>{{ cmp.ly }}</td>-->
+                        <!--<td>{{ cmp.cy }}</td>-->
+                        <!--<td>62.65</td>-->
                       </tr>
                     {% endfor %}
                     </tbody>
@@ -56,50 +57,14 @@
                   <h4> Top Categories </h4>
                   <table class="table">
                     <thead>
+                    {% for cat in top_categories %}
                       <tr>
-                        <th>Name</th>
-                        <th>LY YTD</th>
-                        <th>CY YTD</th>
-                        <th>YTD %</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Beans</td>
-                        <td>$6.85</td>
-                        <td>$9.45</td>
+                        <td>{{ cat.name }}</td>
+                        <td>12.58</td>
+                        <td>{{ cat.cy }}</td>
                         <td>62.65</td>
                       </tr>
-                      <tr>
-                        <td>Pantry</td>
-                        <td>$6.85</td>
-                        <td>$9.45</td>
-                        <td>62.65</td>
-                      </tr>
-                      <tr>
-                        <td>Frozen</td>
-                        <td>$6.85</td>
-                        <td>$9.45</td>
-                        <td>62.65</td>
-                      </tr>
-                      <tr>
-                        <td>Rice</td>
-                        <td>$6.85</td>
-                        <td>$9.45</td>
-                        <td>62.65</td>
-                      </tr>
-                      <tr>
-                        <td>Iron</td>
-                        <td>$6.85</td>
-                        <td>$9.45</td>
-                        <td>62.65</td>
-                      </tr>
-                      <tr>
-                        <td>Ply</td>
-                        <td>$6.85</td>
-                        <td>$9.45</td>
-                        <td>62.65</td>
-                      </tr>
+                    {% endfor %}
                     </tbody>
                   </table>
               </div>
@@ -110,6 +75,7 @@
               <div id="container2" class="col-sm-3 col-md-6 col-lg-4"></div>
               <div id="container3" class="col-sm-3 col-md-6 col-lg-4"></div>
           </div>
+          {% endif %}
       </div>
 {% endblock %}
 {% block static %}
@@ -119,7 +85,7 @@
    $('#from_date').datepicker({'dateFormat': 'mm/dd/yy'});
    $('#to_date').attr("placeholder", "To Date");
    $('#to_date').datepicker({'dateFormat': 'mm/dd/yy'});
-
+{% if form_name == 'edit' %}
 Highcharts.chart('container', {
     chart: {
         type: 'column'
@@ -177,7 +143,7 @@ Highcharts.chart('container1', {
     tooltip: {
         headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
         pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
         footerFormat: '</table>',
         shared: true,
         useHTML: true
@@ -188,15 +154,7 @@ Highcharts.chart('container1', {
             borderWidth: 0
         }
     },
-    series: [{
-        name: 'LY YTD',
-        data: [0, 0, 0, 0]
-
-    }, {
-        name: 'CY YTD',
-        data: [83.6, 78.8, 98.5, 93.4]
-
-    }]
+    series: {{ series2|safe }},
 });
 
 Highcharts.chart('container2', {
@@ -204,7 +162,7 @@ Highcharts.chart('container2', {
         text: 'Category YTD Vs LY'
     },
     xAxis: {
-        categories: ['Beans', 'Rice', 'Pantry', 'Bananas']
+        categories: {{ xAxis3|safe }}
     },
     labels: {
         items: [{
@@ -216,24 +174,7 @@ Highcharts.chart('container2', {
             }
         }]
     },
-    series: [{
-        type: 'column',
-        name: 'YTD',
-        data: [3, 2, 1, 3]
-    }, {
-        type: 'column',
-        name: 'LY',
-        data: [4, 3, 2, 7]
-    },{
-        type: 'spline',
-        name: 'Average',
-        data: [3, 2, 1, 3],
-        marker: {
-            lineWidth: 2,
-            lineColor: Highcharts.getOptions().colors[3],
-            fillColor: 'white'
-        }
-    }]
+    series: {{ series3|safe }}
 });
 
 Highcharts.chart('container3', {
@@ -265,33 +206,10 @@ Highcharts.chart('container3', {
     series: [{
         name: 'Brands',
         colorByPoint: true,
-        data: [{
-            name: 'Distributed Brands',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Beans',
-            y: 11.84
-        }, {
-            name: 'Rice',
-            y: 10.85
-        }, {
-            name: 'Ege',
-            y: 4.67
-        }, {
-            name: 'Bread',
-            y: 4.18
-        }, {
-            name: 'Sugar',
-            y: 1.64
-        }, {
-            name: 'Other',
-            y: 2.61
-        }]
+        data: {{ pie_chart_data| safe }}
     }]
 });
-
+{% endif %}
     });
 </script>
 {% endblock %}

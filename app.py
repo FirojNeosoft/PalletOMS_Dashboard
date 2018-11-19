@@ -15,18 +15,29 @@ cursor = cnx.cursor
 @app.route('/', methods = ['GET', 'POST'])
 def dashboard():
     form = CompanyForm()
-    # import pdb; pdb.set_trace()
-    cnx.calculate_category_cy_ytd(1)
-    xAxis1 = {"categories": [datetime.datetime.now().year], "crosshair": 'true'}
-    series1 = [{"name": 'LY YTD', "data": [cnx.calculate_ly_ytd(1)]},
-               {"name": 'CY YTD', "data": [cnx.calculate_cy_ytd(1)]}]
-    top_companies = cnx.get_top_companies()
     if request.method == 'POST':
         if form.validate():
-            pass
+            cmp_id = int(form.cmp.data)
+            xAxis1 = {"categories": [datetime.datetime.now().year], "crosshair": 'true'}
+            series1 = [{"name": 'LY YTD', "data": [cnx.calculate_ly_ytd(cmp_id)]},
+                       {"name": 'CY YTD', "data": [cnx.calculate_cy_ytd(cmp_id)]}]
+            top_companies = cnx.get_top_customers(cmp_id)
+
+            xAxis2 = {"categories": [], "crosshair": 'true'}
+            series2 = [{"name": 'LY YTD', "data": [cnx.calculate_ly_quaterly_ytd(cmp_id, 1), cnx.calculate_ly_quaterly_ytd(cmp_id, 2), cnx.calculate_ly_quaterly_ytd(cmp_id, 3), cnx.calculate_ly_quaterly_ytd(cmp_id, 4)]},
+                       {"name": 'CY YTD', "data": [cnx.calculate_cy_quaterly_ytd(cmp_id, 1), cnx.calculate_cy_quaterly_ytd(cmp_id, 2), cnx.calculate_cy_quaterly_ytd(cmp_id, 3), cnx.calculate_cy_quaterly_ytd(cmp_id, 4)]}]
+
+            xAxis3 = {"categories": [datetime.datetime.now().year], "crosshair": 'true'}
+            series3 = [{"name": 'LY YTD', "data": cnx.calculate_category_ly_ytd(cmp_id)},
+                       {"name": 'CY YTD', "data": cnx.calculate_category_ly_ytd(cmp_id)}]
+            top_categories = cnx.get_top_categories(cmp_id)
+            pie_chart_data = cnx.calculate_category_cy_ytd_pie(cmp_id)
+            return render_template('form.html', form=form, list_companies=cnx.get_companies(), form_name='edit',\
+                                   xAxis1=xAxis1, series1=series1, xAxis2=xAxis2, series2=series2, xAxis3=xAxis3, series3=series3,\
+                                   top_companies=top_companies, top_categories=top_categories, pie_chart_data=pie_chart_data)
         else:
-            return render_template('form.html', form = form, form_name = 'add', xAxis1=xAxis1, series1=series1)
-    return render_template('form.html', form = form, list_companies = cnx.get_companies(), form_name = 'add',  xAxis1=xAxis1, series1=series1, top_companies=top_companies)
+            return render_template('form.html', form = form, form_name = 'add', list_companies=cnx.get_companies())
+    return render_template('form.html', form = form,  form_name='add', list_companies=cnx.get_companies())
 
 
 if __name__ == '__main__':
