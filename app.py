@@ -1,4 +1,5 @@
 import datetime
+
 from flask import *
 from config import *
 from forms import CompanyForm
@@ -12,7 +13,30 @@ cnx = DatabaseConnection()
 cursor = cnx.cursor
 
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/')
+def home():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return redirect('/dashboard')
+
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    if request.form['password'] == 'triveni@123' and request.form['username'] == 'srujal':
+        session['logged_in'] = True
+    else:
+        return render_template('login.html', message="Incorrect username or password")
+    return home()
+
+
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    return home()
+
+
+@app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
     form = CompanyForm()
     if request.method == 'POST':
